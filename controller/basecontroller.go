@@ -5,10 +5,7 @@ import (
 )
 
 type RouteHandle struct {
-
 }
-
-
 
 type BaseController struct {
 	W http.ResponseWriter
@@ -23,7 +20,7 @@ func (handle *RouteHandle) Router(relativePath string, handler func(http.Respons
 }
 
 // httpHandle必须要实现的接口方法，请求入口
-func (handle *RouteHandle)ServeHTTP(w http.ResponseWriter,r *http.Request)()  {
+func (handle *RouteHandle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// 过滤谷歌浏览器默认ico请求
 	if r.URL.Path == "/favicon.ico" {
