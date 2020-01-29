@@ -12,11 +12,11 @@ type app struct {
 	router * router
 }
 
+// 控制器路由
+type HandlerController interface {}
+// 请求回调路由
+type HandlerFunc func(ctx *utils.Context)
 
-
-type HandlerFunc interface {
-
-}
 
 var mu sync.Mutex
 var AppInstance *app
@@ -49,11 +49,12 @@ func (this * app) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	key := method + "-" + path
-	if handler, ok := this.router.handler[key]; ok {
-		//AppPrint(*handler)
-		vf := reflect.ValueOf(handler)
+	if handlerMap, ok := this.router.handlerFuncs[key]; ok {
+		handlerMap(utils.NewContext(w,req))
+	}else if handlerMap, ok := this.router.handlerControllers[key]; ok {
+		vf := reflect.ValueOf(handlerMap)
 		if path == "/" {
-			 path = "Index"
+			path = "Index"
 		}
 		method := vf.MethodByName(path)
 		//AppPrint(method)
@@ -62,44 +63,39 @@ func (this * app) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		args = append(args, reflect.ValueOf(utils.NewContext(w,req)))
 		// 调用方法
 		method.Call(args)
-		//handler(newContext(w,req))
-	} else {
-		// TODO pathinfo router
-		//vf := reflect.ValueOf(handler)
-		//if path == "/" {
-		//	path = "Index"
-		//}else {
-		//	pathArr := strings.Split(path,"/")
-		//	if len(pathArr) < 2 {
-		//		fmt.Fprintf(w, "METHOD ROUTER NOT FOUND: %s\n", req.URL)
-		//		return
-		//	}
-		//	path = pathArr[1]
-		//}
-		//println(path)
-		//method := vf.MethodByName(path)
-		//// 没有映射出值  说明方法不存在
-		//if method == (reflect.Value{}) {
-		//	fmt.Fprintf(w, "METHOD NOT FOUND: %s\n", req.URL)
-		//}else {
-			fmt.Fprintf(w, "ROUTER NOT FOUND: %s\n", req.URL)
-		//}
+	}else {
+		fmt.Fprintf(w, "ROUTER NOT FOUND: %s\n", req.URL)
 	}
 }
 
-// 添加路由
-func (this * app) AddRouter(method string, pathUrl string, handler HandlerFunc) {
-	this.router.AddRouter(method, pathUrl, handler)
+// 添加控制器路由
+func (this * app) AddControllerRouter(method string, pathUrl string, handler HandlerController) {
+	this.router.AddControllerRouter(method, pathUrl, handler)
 }
 
-// get请求
-func (this * app) GET(pathUrl string, handler HandlerFunc) {
-	this.router.AddRouter("GET", pathUrl, handler)
+// 添加回调路由
+func (this * app) AddFuncRouter(method string, pathUrl string, handler HandlerFunc) {
+	this.router.AddFuncRouter(method, pathUrl, handler)
 }
 
-// post请求
-func (this * app) POST(pathUrl string, handler HandlerFunc) {
-	this.router.AddRouter("POST", pathUrl, handler)
+// get控制器请求
+func (this * app) AddGetControllerRouter(pathUrl string, handler HandlerController) {
+	this.router.AddControllerRouter("GET", pathUrl, handler)
+}
+
+// post控制器请求
+func (this * app) AddPostControllerRouter(pathUrl string, handler HandlerController) {
+	this.router.AddControllerRouter("POST", pathUrl, handler)
+}
+
+// get回调请求
+func (this * app) AddGetFuncRouter(pathUrl string, handler HandlerFunc) {
+	this.router.AddFuncRouter("GET", pathUrl, handler)
+}
+
+// post回调请求
+func (this * app) AddPostFuncRouter(pathUrl string, handler HandlerFunc) {
+	this.router.AddFuncRouter("POST", pathUrl, handler)
 }
 
 
