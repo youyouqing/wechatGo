@@ -14,13 +14,14 @@ type config struct {
 	// 配置map
 	Configs map[string]string
 }
-const DEV_PATH  = "develop.env"
-const PRO_PATH  = "product.env"
+
+const DEV_PATH = "develop.env"
+const PRO_PATH = "product.env"
 
 var ConfigInstance *config
 var muc sync.Mutex
 
-func ShareConfigInstance(isProduct bool) * config  {
+func ShareConfigInstance(isProduct bool) *config {
 	muc.Lock()
 	defer muc.Unlock()
 
@@ -28,7 +29,7 @@ func ShareConfigInstance(isProduct bool) * config  {
 		configPath := PRO_PATH
 		if isProduct {
 			configPath = PRO_PATH
-		}else {
+		} else {
 			configPath = DEV_PATH
 		}
 		ConfigInstance = NewConfig(configPath).GetEnvConfig()
@@ -36,20 +37,19 @@ func ShareConfigInstance(isProduct bool) * config  {
 	return ConfigInstance
 }
 
-
 func NewConfig(configPath string) *config {
-	return  &config{ConfigPath:configPath}
+	return &config{ConfigPath: configPath}
 }
 
-func (this *config)SetConfigPath(configPath string)  {
+func (this *config) SetConfigPath(configPath string) {
 	this.ConfigPath = configPath
 }
 
-func (this *config) GetConfigPath() string  {
+func (this *config) GetConfigPath() string {
 	return this.ConfigPath
 }
 
-func (this *config) GetEnvConfig() *config{
+func (this *config) GetEnvConfig() *config {
 	config := initConfig(this.ConfigPath)
 	if len(config) == 0 {
 		panic("develop.env file can not be null")
@@ -62,7 +62,7 @@ func (this *config) GetConfigFromKey(key string) string {
 	if len(this.Configs) == 0 {
 		panic("no config initd")
 	}
-	if _,ok := this.Configs[key]; ok {
+	if _, ok := this.Configs[key]; ok {
 		return this.Configs[key]
 	}
 	return ""

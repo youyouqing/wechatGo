@@ -1,8 +1,9 @@
 package err
 
 type JobError struct {
-	JobId  int
-	Msg string
+	Err   error
+	JobId int
+	Msg   string
 }
 
 func (e *JobError) Error() string {
