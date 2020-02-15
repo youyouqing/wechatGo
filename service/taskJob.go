@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/robfig/cron/v3"
 	"sync"
+	"time"
 	"wechatGin.cthai.cn/err"
 )
 
@@ -16,12 +17,16 @@ type JobQueue struct {
 
 // 任务实体
 type TaskJob struct {
-	TaskId         int
-	UserId         int
-	TaskType       int
-	Entry          Entry
-	IsRunning      bool
-	RepeatCrontStr string
+	TaskId            int
+	UserId            int
+	TaskType          int
+	KnockTime         string
+	NotifyTitle       string
+	NotifyContent     string
+	AfterTimeInstance *time.Timer
+	Entry             Entry
+	IsRunning         bool
+	RepeatCrontStr    string
 }
 
 // cron 定时器实体
@@ -51,22 +56,26 @@ func newJobQueue() *JobQueue {
 	return &JobQueue{make(map[int]*TaskJob)}
 }
 
-func NewTaskJob(taskId int, userId int, taskType int, entry Entry, isRunning bool, repeatCrontStr string) *TaskJob {
+func NewTaskJob(taskId int, userId int, taskType int, knockTime string, notifyTitle string, notifyContent string, afterTimeInstance *time.Timer, entry Entry, isRunning bool, repeatCrontStr string) *TaskJob {
 	return &TaskJob{
-		TaskId:         taskId,
-		UserId:         userId,
-		TaskType:       taskType,
-		Entry:          entry,
-		IsRunning:      isRunning,
-		RepeatCrontStr: repeatCrontStr,
+		TaskId:            taskId,
+		UserId:            userId,
+		TaskType:          taskType,
+		KnockTime:         knockTime,
+		NotifyTitle:       notifyTitle,
+		NotifyContent:     notifyContent,
+		AfterTimeInstance: afterTimeInstance,
+		Entry:             entry,
+		IsRunning:         isRunning,
+		RepeatCrontStr:    repeatCrontStr,
 	}
 }
 
 func (this *JobQueue) GetJob(jobId int) (*TaskJob, error) {
 	if j, ok := this.Jobs[jobId]; ok {
-		return j,nil
-	}else {
-		return nil,&err.JobError{JobId: jobId,Msg: "队列不存在该任务"}
+		return j, nil
+	} else {
+		return nil, &err.JobError{JobId: jobId, Msg: "队列不存在该任务"}
 	}
 }
 

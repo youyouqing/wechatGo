@@ -11,7 +11,6 @@ import (
 func main() {
 
 	router := gin.Default()
-
 	//微信api相关
 	wechatApiGroup := router.Group("/wechat")
 	{
