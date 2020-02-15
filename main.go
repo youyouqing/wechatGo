@@ -23,8 +23,8 @@ func main() {
 	{
 		// 加入鉴权中间件
 		//taskApiGroup.Use(AuthToken)
-		taskApiGroup.GET("/add", HandleTaskAdd)
-		taskApiGroup.GET("/addAndStart", HandleTaskAddAndStart)
+		taskApiGroup.POST("/add", HandleTaskAdd)
+		taskApiGroup.POST("/addAndStart", HandleTaskAddAndStart)
 		taskApiGroup.GET("/start/:id", HandleTaskStart)
 		taskApiGroup.GET("/stop/:id", HandleTaskStop)
 	}

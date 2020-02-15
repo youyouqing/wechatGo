@@ -12,7 +12,7 @@ import (
 // 添加任务
 func HandleTaskAdd(ctx *gin.Context) {
 	query := TaskAdd{}
-	err := ctx.BindQuery(&query)
+	err := ctx.ShouldBind(&query)
 	if err != nil {
 		ctx.JSON(500, utils.NewResultError500(err.Error()))
 		ctx.Abort()
@@ -24,7 +24,7 @@ func HandleTaskAdd(ctx *gin.Context) {
 // 添加并开启任务
 func HandleTaskAddAndStart(ctx *gin.Context) {
 	query := TaskAdd{}
-	err := ctx.BindQuery(&query)
+	err := ctx.ShouldBind(&query)
 	if err != nil {
 		ctx.JSON(500, utils.NewResultError500(err.Error()))
 		ctx.Abort()
