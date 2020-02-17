@@ -43,6 +43,7 @@ Accept: application/json
 ```
 
 ##### 4、暂停任务
+
 ```
 GET http://localhost:8080/task/stop/{$taskId}
 Accept: application/json
@@ -50,8 +51,9 @@ Accept: application/json
 ```
 
 
-##参与公众号
+## 参与公众号
 
+1. ![http://mmbiz.qpic.cn/mmbiz_jpg/bqbibze7IEueCE3yd4pn8SdJPbgJsPHz8opCAK1AianPuQX6yDvdCG7chTfnyia5UzKaTg8Hdu9cI8CZpre6p7gRw/0](http://mmbiz.qpic.cn/mmbiz_jpg/bqbibze7IEueCE3yd4pn8SdJPbgJsPHz8opCAK1AianPuQX6yDvdCG7chTfnyia5UzKaTg8Hdu9cI8CZpre6p7gRw/0)
 ```javascript
   
 ```
